@@ -1,24 +1,53 @@
 from main import BooksCollector
 
-# класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
-# обязательно указывать префикс Test
 class TestBooksCollector:
 
-    # пример теста:
-    # обязательно указывать префикс test_
-    # дальше идет название метода, который тестируем add_new_book_
-    # затем, что тестируем add_two_books - добавление двух книг
-    def test_add_new_book_add_two_books(self):
-        # создаем экземпляр (объект) класса BooksCollector
-        collector = BooksCollector()
+#Проверка попытки добавить книгу с длинным названием (>40 символов)
+    def test_add_new_book_no_more_than_40(self, books_collector):
+        books_collector.add_new_book('Прежде, чем я упаду')
+        assert len(self.name) < 41
 
-        # добавляем две книги
-        collector.add_new_book('Гордость и предубеждение и зомби')
-        collector.add_new_book('Что делать, если ваш кот хочет вас убить')
+#Проверка, что метод возвращает правильный жанр, если книга найдена
+    def test_set_book_genre_is_selected_from_list(self, books_collector):
+        assert books_collector.books_genre['Крепкий орешек'] == 'Детектив'
 
-        # проверяем, что добавилось именно две
-        # словарь books_rating, который нам возвращает метод get_books_rating, имеет длину 2
-        assert len(collector.get_books_rating()) == 2
+#Проверка метода get_books_with_specific_genre на получение правильных результатов.
+    def test_get_book_genre_found(self, books_collector):
+        genre = books_collector.get_book_genre("Дюна")
+        assert genre == "Фантастика"
 
-    # напиши свои тесты ниже
-    # чтобы тесты были независимыми в каждом из них создавай отдельный экземпляр класса BooksCollector()
+#Проверка получения книг жанра 'Фантастика
+    def test_get_books_with_specific_genre_fantasy(self, books_collector):
+        fantasy_books = books_collector.get_books_with_specific_genre("Фантастика")
+        assert fantasy_books == ["Дюна", "Пятый элемент"]
+
+#Проверяет, что метод get_books_genre возвращает точный словарь books_genre    
+    def test_get_books_genre_current_list(self, books_genre):
+        expected_books_genre = {
+            "Война миров": "Фантастика",
+            "12 стульев": "Комедии",
+            "17 мгновений весны": "Детектив"
+        }
+        actual_books_genre = books_genre.get_books_genre()
+        assert actual_books_genre == expected_books_genre
+
+#Проверка позитивного сценария — отбор детских книг    
+    def test_get_books_for_children_only_children_books(self, kids_book):
+        expected_books = ["Щелкунчик", "Русалочка", "Золушка"]
+        children_books = kids_book.get_books_for_children()       
+        assert children_books == expected_books
+
+#Проверка положительного сценария добавления книги в избранные
+    def test_add_book_in_favorites_success(self, books_genre):
+        books_genre.add_book_in_favorites("Война миров")
+        assert "Война миров" in books_genre.favorites
+
+#проверка успешного удаления книги из избранного
+    def test_delete_book_from_favorites_deletion_completed(self, favorites_books):
+        favorites_books.delete_book_from_favorites("Пятый элемент")
+        assert "Пятый элемент" not in favorites_books.favorites
+
+#Проверка возвращения списка избранных книг, когда список не пуст.
+    def test_get_list_of_favorites_books_return_favorites(self, favorites_books):
+        favorite_book = favorites_books.get_list_of_favorites_books()
+        assert favorite_book == ["Прежде, чем я упаду", "Пятый элемент"]
