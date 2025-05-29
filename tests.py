@@ -1,11 +1,9 @@
-from main import BooksCollector
-
 class TestBooksCollector:
 
 #Проверка попытки добавить книгу с длинным названием (>40 символов)
     def test_add_new_book_no_more_than_40(self, books_collector):
         books_collector.add_new_book('Прежде, чем я упаду')
-        assert len(self.name) < 41
+        assert len(self.name) > 40
 
 #Проверка, что метод возвращает правильный жанр, если книга найдена
     def test_set_book_genre_is_selected_from_list(self, books_collector):
@@ -23,17 +21,13 @@ class TestBooksCollector:
 
 #Проверяет, что метод get_books_genre возвращает точный словарь books_genre    
     def test_get_books_genre_current_list(self, books_genre):
-        expected_books_genre = {
-            "Война миров": "Фантастика",
-            "12 стульев": "Комедии",
-            "17 мгновений весны": "Детектив"
-        }
+        expected_books_genre = kb.books_genre
         actual_books_genre = books_genre.get_books_genre()
         assert actual_books_genre == expected_books_genre
 
 #Проверка позитивного сценария — отбор детских книг    
     def test_get_books_for_children_only_children_books(self, kids_book):
-        expected_books = ["Щелкунчик", "Русалочка", "Золушка"]
+        expected_books = kb.books_genre
         children_books = kids_book.get_books_for_children()       
         assert children_books == expected_books
 
@@ -44,10 +38,14 @@ class TestBooksCollector:
 
 #проверка успешного удаления книги из избранного
     def test_delete_book_from_favorites_deletion_completed(self, favorites_books):
-        favorites_books.delete_book_from_favorites("Пятый элемент")
-        assert "Пятый элемент" not in favorites_books.favorites
+        favorites_books.delete_book_from_favorites("Такси")
+        assert "Вино из одуванчиков" not in favorites_books.favorites
 
 #Проверка возвращения списка избранных книг, когда список не пуст.
     def test_get_list_of_favorites_books_return_favorites(self, favorites_books):
         favorite_book = favorites_books.get_list_of_favorites_books()
-        assert favorite_book == ["Прежде, чем я упаду", "Пятый элемент"]
+        assert favorite_book == ["Вино из одуванчиков", "Такси"]
+
+@pytest.mark.parametrize('fav_books', books_genre)
+def test_check_fav_books(books_genre):
+    assert check_fav_books(books_genre)
