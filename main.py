@@ -19,7 +19,7 @@ class BooksCollector:
     # получаем жанр книги по её имени
     def get_book_genre(self, name):
         return self.books_genre.get(name)
-
+    
     # выводим список книг с определённым жанром
     def get_books_with_specific_genre(self, genre):
         books_with_specific_genre = []
@@ -28,7 +28,7 @@ class BooksCollector:
                 if book_genre == genre:
                     books_with_specific_genre.append(name)
         return books_with_specific_genre
-
+    
     # получаем словарь books_genre
     def get_books_genre(self):
         return self.books_genre
@@ -41,7 +41,7 @@ class BooksCollector:
                 books_for_children.append(name)
         return books_for_children
 
-    # добавляем книгу в Избранное
+  # добавляем книгу в Избранное
     def add_book_in_favorites(self, name):
         if name in self.books_genre:
             if name not in self.favorites:
