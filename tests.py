@@ -7,7 +7,7 @@ class TestBooksCollector:
     @pytest.mark.parametrize('book', ['Лолита', 'Азазель'])
     def test_add_new_book_positive(self, books_collector, book):
         books_collector.add_new_book(book)
-        assert books_collector.books_genre[book] == ''
+        assert len(books_collector.get_books_genre()) == 2
 
 #Проверка, что метод возвращает правильный жанр, если книга найдена
     def test_set_book_genre_valid_name(self, books_collector):
@@ -52,6 +52,7 @@ class TestBooksCollector:
 
 #проверка успешного удаления книги из избранного
     def test_delete_book_from_favorites_deletion_completed(self, books_collector):
+        books_collector.add_new_book('Такси')
         books_collector.delete_book_from_favorites("Такси")
         assert "Вино из одуванчиков" not in books_collector.favorites
 
